@@ -1,0 +1,71 @@
+[options]
+# Contoh konfigurasi Odoo untuk development/learning
+# Salin file ini menjadi odoo.conf dan sesuaikan jika diperlukan
+
+addons_path = your_addons_path
+admin_passwd = your_admin_password
+csv_internal_sep = ,
+data_dir = your_data_dir
+# db_app_name = your_db_app_name
+db_host = your_db_host
+# db_maxconn = your_db_maxconn
+# db_maxconn_gevent = your_db_maxconn_gevent
+db_name = your_db_name
+# db_password = your_db_password
+db_port = your_db_port
+# db_replica_host = your_db_replica_host
+# db_replica_port = your_db_replica_port
+# db_sslmode = your_db_sslmode
+# db_template = your_db_template
+db_user = your_db_user
+# dbfilter = your_dbfilter
+# email_from = your_email_from
+# from_filter = your_from_filter
+# geoip_city_db = your_geoip_city_db
+# geoip_country_db = your_geoip_country_db
+# gevent_port = your_gevent_port
+http_enable = True
+http_interface = 0.0.0.0
+http_port = your_http_port
+# limit_memory_soft = your_limit_memory_soft
+# limit_time_real = your_limit_time_real
+# limit_time_real_cron = your_limit_time_real_cron
+# limit_time_worker_cron = your_limit_time_worker_cron
+list_db = True
+# log_db = your_log_db
+# log_db_level = your_log_db_level
+# log_handler = your_log_handler
+log_level = info
+# logfile = your_logfile
+# max_cron_threads = your_max_cron_threads
+# osv_memory_count_limit = your_osv_memory_count_limit
+# pg_path = your_pg_path
+# pidfile = your_pidfile
+# pre_upgrade_scripts = your_pre_upgrade_scripts
+proxy_mode = False
+# reportgz = your_reportgz
+# screencasts = your_screencasts
+# screenshots = your_screenshots
+server_wide_modules = base,rpc,web
+skip_auto_install = False
+# smtp_password = your_smtp_password
+smtp_port = your_smtp_port
+smtp_server = your_smtp_server
+smtp_ssl = False
+# smtp_ssl_certificate_filename = your_smtp_ssl_certificate_filename
+# smtp_ssl_private_key_filename = your_smtp_ssl_private_key_filename
+# smtp_user = your_smtp_user
+syslog = False
+# transient_age_limit = your_transient_age_limit
+# unaccent = your_unaccent
+# upgrade_path = your_upgrade_path
+# websocket_keep_alive_timeout = your_websocket_keep_alive_timeout
+# websocket_rate_limit_burst = your_websocket_rate_limit_burst
+# websocket_rate_limit_delay = your_websocket_rate_limit_delay
+with_demo = False
+# x_sendfile = your_x_sendfile
+# bin_path = your_bin_path
+
+# Catatan:
+# - Hapus tanda '#' dan sesuaikan value jika ingin mengaktifkan opsi tertentu
+# - Jangan commit file odoo.conf yang berisi data sensitif ke repository

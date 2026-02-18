@@ -1,0 +1,52 @@
+# =======================
+# ODOO PROJECT STRUCTURE
+# =======================
+# - Odoo core tidak masuk repo (gunakan submodule/docker/package manager)
+# - Hanya custom_addons yang di-track dalam repo
+
+# Odoo Core (JANGAN MASUK REPO)
+odoo/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual Environment
+venv/
+.venv/
+env/
+.env
+
+# Odoo Runtime
+*.log
+*.pid
+filestore/
+*.db
+*.sqlite*
+sessions/
+odoo.conf
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Security
+*.pem
+*.key
+*.crt
+.secret*
+
+# Misc
+*.bak
+*.tmp
+*.old
