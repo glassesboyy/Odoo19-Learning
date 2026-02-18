@@ -8,7 +8,12 @@
     'category': 'Real Estate',
     'license': 'LGPL-3',
     'depends': ['base'],
-    'data': [],
+    'data': [
+        'security/res_groups.xml',
+    ],
+    'demo': [
+        'demo/demo.xml',
+    ],
     'installable': True,
     'application': True,
 }

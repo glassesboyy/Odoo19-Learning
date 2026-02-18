@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="estate_property_demo_1" model="estate.property">
+        <field name="name">Demo Estate Property</field>
+        <field name="expected_price">100000</field>
+        <field name="description">Demo property untuk pembelajaran</field>
+        <field name="postcode">12345</field>
+        <field name="date_availability">2026-02-19</field>
+        <field name="property_type_id" ref="estate.property_type_house"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="state">new</field>
+    </record>
+</odoo>
