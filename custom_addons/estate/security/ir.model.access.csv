@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_estate_property_readonly,Estate Property Readonly Access,model_estate_property,base.group_user,1,0,0,0
+access_estate_property_admin,Estate Property Admin Access,model_estate_property,estate.estate_admin,1,1,1,1
