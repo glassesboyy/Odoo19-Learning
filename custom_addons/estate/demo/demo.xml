@@ -1,13 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Demo Property 1 - Luxury Villa -->
     <record id="estate_property_demo_1" model="estate.property">
-        <field name="name">Demo Estate Property</field>
-        <field name="expected_price">100000</field>
-        <field name="description">Demo property untuk pembelajaran</field>
-        <field name="postcode">12345</field>
-        <field name="date_availability">2026-02-19</field>
-        <field name="property_type_id" ref="estate.property_type_house"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="name">Luxury Villa with Ocean View</field>
+        <field name="description">Beautiful 5-bedroom villa with stunning ocean views, private pool, and garden</field>
+        <field name="postcode">10001</field>
+        <field name="date_availability">2026-03-15</field>
+        <field name="expected_price">500000</field>
+        <field name="bedrooms">5</field>
+        <field name="living_area">350</field>
+        <field name="facades">3</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">200</field>
+        <field name="garden_orientation">south</field>
+        <field name="active">True</field>
         <field name="state">new</field>
+    </record>
+
+    <!-- Demo Property 2 - Modern Apartment -->
+    <record id="estate_property_demo_2" model="estate.property">
+        <field name="name">Modern City Apartment</field>
+        <field name="description">Cozy 2-bedroom apartment in the heart of downtown</field>
+        <field name="postcode">20045</field>
+        <field name="date_availability">2026-04-01</field>
+        <field name="expected_price">180000</field>
+        <field name="bedrooms">2</field>
+        <field name="living_area">85</field>
+        <field name="facades">1</field>
+        <field name="garage">False</field>
+        <field name="garden">False</field>
+        <field name="garden_area">0</field>
+        <field name="active">True</field>
+        <field name="state">offer_received</field>
+    </record>
+
+    <!-- Demo Property 3 - Family House -->
+    <record id="estate_property_demo_3" model="estate.property">
+        <field name="name">Spacious Family House</field>
+        <field name="description">Perfect family home with 4 bedrooms, large backyard, and quiet neighborhood</field>
+        <field name="postcode">30112</field>
+        <field name="date_availability">2026-05-10</field>
+        <field name="expected_price">320000</field>
+        <field name="bedrooms">4</field>
+        <field name="living_area">180</field>
+        <field name="facades">2</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">150</field>
+        <field name="garden_orientation">east</field>
+        <field name="active">True</field>
+        <field name="state">new</field>
+    </record>
+
+    <!-- Demo Property 4 - Studio Loft -->
+    <record id="estate_property_demo_4" model="estate.property">
+        <field name="name">Charming Studio Loft</field>
+        <field name="description">Trendy studio loft in artistic district, perfect for young professionals</field>
+        <field name="postcode">40220</field>
+        <field name="date_availability">2026-03-20</field>
+        <field name="expected_price">120000</field>
+        <field name="bedrooms">1</field>
+        <field name="living_area">45</field>
+        <field name="facades">1</field>
+        <field name="garage">False</field>
+        <field name="garden">False</field>
+        <field name="garden_area">0</field>
+        <field name="active">True</field>
+        <field name="state">offer_accepted</field>
+    </record>
+
+    <!-- Demo Property 5 - Country Estate -->
+    <record id="estate_property_demo_5" model="estate.property">
+        <field name="name">Country Estate with Vineyard</field>
+        <field name="description">Magnificent countryside estate with 6 bedrooms, vineyard, and horse stables</field>
+        <field name="postcode">50789</field>
+        <field name="date_availability">2026-06-01</field>
+        <field name="expected_price">850000</field>
+        <field name="bedrooms">6</field>
+        <field name="living_area">450</field>
+        <field name="facades">4</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">500</field>
+        <field name="garden_orientation">west</field>
+        <field name="active">True</field>
+        <field name="state">new</field>
+    </record>
+
+    <!-- Demo Property 6 - Beach Condo -->
+    <record id="estate_property_demo_6" model="estate.property">
+        <field name="name">Beachfront Condo</field>
+        <field name="description">Beautiful 3-bedroom condo right on the beach with amazing sunset views</field>
+        <field name="postcode">60554</field>
+        <field name="date_availability">2026-04-15</field>
+        <field name="expected_price">275000</field>
+        <field name="bedrooms">3</field>
+        <field name="living_area">120</field>
+        <field name="facades">2</field>
+        <field name="garage">True</field>
+        <field name="garden">False</field>
+        <field name="garden_area">0</field>
+        <field name="active">True</field>
+        <field name="state">offer_received</field>
+    </record>
+
+    <!-- Demo Property 7 - Mountain Cabin -->
+    <record id="estate_property_demo_7" model="estate.property">
+        <field name="name">Rustic Mountain Cabin</field>
+        <field name="description">Cozy 2-bedroom mountain retreat with fireplace and scenic mountain views</field>
+        <field name="postcode">70998</field>
+        <field name="date_availability">2026-07-01</field>
+        <field name="expected_price">195000</field>
+        <field name="bedrooms">2</field>
+        <field name="living_area">95</field>
+        <field name="facades">1</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">80</field>
+        <field name="garden_orientation">north</field>
+        <field name="active">True</field>
+        <field name="state">sold</field>
+    </record>
+
+    <!-- Demo Property 8 - Penthouse -->
+    <record id="estate_property_demo_8" model="estate.property">
+        <field name="name">Ultra-Modern Penthouse</field>
+        <field name="description">Luxurious 4-bedroom penthouse with rooftop terrace and city skyline views</field>
+        <field name="postcode">80443</field>
+        <field name="date_availability">2026-05-20</field>
+        <field name="expected_price">680000</field>
+        <field name="bedrooms">4</field>
+        <field name="living_area">280</field>
+        <field name="facades">3</field>
+        <field name="garage">True</field>
+        <field name="garden">False</field>
+        <field name="garden_area">0</field>
+        <field name="active">True</field>
+        <field name="state">new</field>
+    </record>
+
+    <!-- Demo Property 9 - Townhouse -->
+    <record id="estate_property_demo_9" model="estate.property">
+        <field name="name">Classic Townhouse</field>
+        <field name="description">Elegant 3-bedroom townhouse in historic district with original hardwood floors</field>
+        <field name="postcode">90667</field>
+        <field name="date_availability">2026-04-25</field>
+        <field name="expected_price">245000</field>
+        <field name="bedrooms">3</field>
+        <field name="living_area">140</field>
+        <field name="facades">2</field>
+        <field name="garage">False</field>
+        <field name="garden">True</field>
+        <field name="garden_area">40</field>
+        <field name="garden_orientation">south</field>
+        <field name="active">True</field>
+        <field name="state">offer_received</field>
+    </record>
+
+    <!-- Demo Property 10 - Farmhouse -->
+    <record id="estate_property_demo_10" model="estate.property">
+        <field name="name">Renovated Farmhouse</field>
+        <field name="description">Charming 5-bedroom farmhouse with barn, chicken coop, and organic garden</field>
+        <field name="postcode">10887</field>
+        <field name="date_availability">2026-06-15</field>
+        <field name="expected_price">420000</field>
+        <field name="bedrooms">5</field>
+        <field name="living_area">220</field>
+        <field name="facades">2</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">300</field>
+        <field name="garden_orientation">east</field>
+        <field name="active">True</field>
+        <field name="state">canceled</field>
     </record>
 </odoo>

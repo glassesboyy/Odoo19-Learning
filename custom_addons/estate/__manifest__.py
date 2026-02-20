@@ -1,6 +1,6 @@
 {
     'name': 'Estate',
-    'version': '1.0.0',
+    'version': '19.0.0.0.0',
     'summary': 'Modul Estate untuk belajar Odoo 19',
     'description': 'Modul sederhana untuk manajemen estate.',
     'author': 'Teguh Surya Zulfikar',
