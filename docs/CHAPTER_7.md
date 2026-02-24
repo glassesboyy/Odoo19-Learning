@@ -111,25 +111,6 @@ Semua ini dilakukan saat **upgrade module**. Tanpa upgrade, Odoo masih membaca s
 - `(6, 0, [ids])`: Command untuk "set" relasi many2many
 - `ref('property_tag_luxury')`: Mengambil ID record berdasarkan external ID
 
-### Penjelasan Field NULL di Database
-
-Ketika melihat data di database, Anda mungkin menemukan beberapa field NULL:
-
-#### ✅ NORMAL (Field yang Boleh NULL):
-- **`selling_price`**: NULL untuk property yang belum sold. Hanya terisi saat status = sold
-- **`buyer_id`**: NULL untuk property yang belum ada buyer. Hanya terisi saat ada offer accepted/sold
-
-#### ❌ TIDAK NORMAL (Field yang Seharusnya Terisi):
-- **`property_type_id`**: Jika NULL, berarti data demo lama belum terhapus. Solusi: Uninstall & Reinstall module
-- **`salesperson_id`**: Seharusnya default ke user yang login (admin)
-
-#### Distribusi Data Demo (5 Properties):
-1. **Luxury Villa** - Status: New (tidak ada offers)
-2. **Modern City Apartment** - Status: Offer Received (2 offers pending)
-3. **Spacious Family House** - Status: Offer Accepted (buyer: base.res_partner_2, selling_price: 325000)
-4. **Beachfront Condo** - Status: Sold (buyer: base.res_partner_3, selling_price: 280000)
-5. **Renovated Downtown Loft** - Status: New (tidak ada offers)
-
 ## Perubahan Views
 
 ### Form View Estate Property
@@ -190,26 +171,6 @@ Widget yang digunakan untuk menampilkan many2many field sebagai tag badges yang 
 5. **Security access** untuk kontrol akses
 6. **Widget tags** untuk tampilan yang lebih baik
 7. **Data demo lengkap** dengan 5 properties yang mencakup berbagai status dan relasi
-
-## Troubleshooting
-
-### Problem: Field property_type_id, buyer_id, dll masih NULL
-**Penyebab**: Data lama dari Chapter sebelumnya belum terhapus, sementara demo.xml sudah berubah.
-
-**Solusi**:
-1. Uninstall module Estate
-2. Install ulang module Estate
-3. Demo data akan terbuat ulang dengan relasi yang benar
-
-### Problem: Tags tidak muncul sebagai badges
-**Penyebab**: Widget tidak diterapkan di view.
-
-**Solusi**: Pastikan di view XML ada `widget="many2many_tags"` pada field tag_ids
-
-### Problem: Tab Offers atau Other Info tidak muncul
-**Penyebab**: Module belum di-upgrade.
-
-**Solusi**: Upgrade module Estate dari menu Apps
 
 ## Data Demo
 
