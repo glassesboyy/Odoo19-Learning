@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -78,3 +79,16 @@ class EstateProperty(models.Model):
                     'message': 'The availability date cannot be in the past.',
                 }
             }
+    
+    # Action Methods
+    def action_cancel(self):
+        for record in self:
+            if record.state == 'sold':
+                raise UserError("Sold property cannot be canceled.")
+            record.state = 'canceled'
+    
+    def action_sold(self):
+        for record in self:
+            if record.state == 'canceled':
+                raise UserError("Canceled property cannot be sold.")
+            record.state = 'sold'
