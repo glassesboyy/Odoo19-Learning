@@ -1,10 +1,15 @@
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
     _name = 'estate.property'
     _description = 'Real Estate Property'
+    
+    _sql_constraints = [
+        ('check_expected_price_positive', 'CHECK(expected_price > 0)', 'Expected price must be strictly positive.'),
+        ('check_selling_price_positive', 'CHECK(selling_price >= 0)', 'Selling price must be positive.'),
+    ]
 
     name = fields.Char(required=True)
     description = fields.Text()
@@ -92,3 +97,10 @@ class EstateProperty(models.Model):
             if record.state == 'canceled':
                 raise UserError("Canceled property cannot be sold.")
             record.state = 'sold'
+    
+    # Python Constraints
+    @api.constrains('selling_price', 'expected_price')
+    def _check_selling_price(self):
+        for record in self:
+            if record.selling_price > 0 and record.selling_price < (0.9 * record.expected_price):
+                raise ValidationError("Selling price cannot be lower than 90% of the expected price.")

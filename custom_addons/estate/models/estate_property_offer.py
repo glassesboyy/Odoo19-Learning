@@ -5,6 +5,10 @@ from datetime import timedelta
 class EstatePropertyOffer(models.Model):
     _name = 'estate.property.offer'
     _description = 'Real Estate Property Offer'
+    
+    _sql_constraints = [
+        ('check_offer_price_positive', 'CHECK(price > 0)', 'Offer price must be strictly positive.'),
+    ]
 
     price = fields.Float()
     status = fields.Selection([
