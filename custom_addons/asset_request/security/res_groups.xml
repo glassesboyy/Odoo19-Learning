@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- Security Groups for Asset Request Approval                   -->
+    <!-- ============================================================ -->
+
+    <!-- Base User -->
+    <record id="group_asset_request_user" model="res.groups">
+        <field name="name">Asset Request User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- L1 - Manager -->
+    <record id="group_approver_l1" model="res.groups">
+        <field name="name">Asset Request Approver Level 1 - Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_asset_request_user'))]"/>
+    </record>
+
+    <!-- L2 - Sr. Manager -->
+    <record id="group_approver_l2" model="res.groups">
+        <field name="name">Asset Request Approver Level 2 - Sr. Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_approver_l1'))]"/>
+    </record>
+
+    <!-- L3 - Director -->
+    <record id="group_approver_l3" model="res.groups">
+        <field name="name">Asset Request Approver Level 3 - Director</field>
+        <field name="implied_ids" eval="[(4, ref('group_approver_l2'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- Demo Users for Approval                                       -->
+    <!-- ============================================================ -->
+    <record id="demo_user_joko" model="res.users">
+        <field name="name">Joko</field>
+        <field name="login">joko</field>
+        <field name="password">joko</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
+    </record>
+
+    <record id="demo_user_wira" model="res.users">
+        <field name="name">Wira</field>
+        <field name="login">wira</field>
+        <field name="password">wira</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
+    </record>
+
+    <record id="demo_user_reno" model="res.users">
+        <field name="name">Reno</field>
+        <field name="login">reno</field>
+        <field name="password">reno</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l3'))]"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Demo Partners (Requestors)                                    -->
+    <!-- ============================================================ -->
+    <record id="demo_partner_dept_it" model="res.partner">
+        <field name="name">IT Department</field>
+    </record>
+
+    <record id="demo_partner_dept_sales" model="res.partner">
+        <field name="name">Sales Department</field>
+    </record>
+
+    <record id="demo_partner_dept_hr" model="res.partner">
+        <field name="name">HR Department</field>
+    </record>
+</odoo>
+

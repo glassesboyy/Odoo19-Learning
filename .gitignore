@@ -50,3 +50,7 @@ Desktop.ini
 *.bak
 *.tmp
 *.old
+
+# Ignore all files in docs/
+docs/
+

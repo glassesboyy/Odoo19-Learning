@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- Notification to approver when request is submitted -->
+    <record id="mail_template_approval_request" model="mail.template">
+        <field name="name">Asset Request: Approval Notification</field>
+        <field name="model_id" ref="model_asset_request"/>
+        <field name="subject">Asset Request {{ object.name }} - Pending Your Approval</field>
+        <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.approval_ids.filtered(lambda a: a.status == 'pending').sorted('level')[:1].approver_id.partner_id.id }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear Approver,</p>
+                <p>A new asset request requires your approval:</p>
+                <ul>
+                    <li><strong>Request No:</strong> <t t-out="object.name"/></li>
+                    <li><strong>Requestor:</strong> <t t-out="object.partner_id.name"/></li>
+                    <li><strong>Request Type:</strong> <t t-out="object.request_type"/></li>
+                    <li><strong>Required Date:</strong> <t t-out="object.required_date"/></li>
+                </ul>
+                <p>Please review and take action at your earliest convenience.</p>
+                <p>Thank you.</p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Daily reminder for pending approvals -->
+    <record id="mail_template_approval_reminder" model="mail.template">
+        <field name="name">Asset Request: Approval Reminder</field>
+        <field name="model_id" ref="model_asset_request"/>
+        <field name="subject">[Reminder] Asset Request {{ object.name }} - Still Pending Your Approval</field>
+        <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.approval_ids.filtered(lambda a: a.status == 'pending').sorted('level')[:1].approver_id.partner_id.id }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear Approver,</p>
+                <p><strong>This is a reminder</strong> that the following asset request is still pending your approval:</p>
+                <ul>
+                    <li><strong>Request No:</strong> <t t-out="object.name"/></li>
+                    <li><strong>Requestor:</strong> <t t-out="object.partner_id.name"/></li>
+                    <li><strong>Request Type:</strong> <t t-out="object.request_type"/></li>
+                    <li><strong>Required Date:</strong> <t t-out="object.required_date"/></li>
+                    <li><strong>Submitted:</strong> <t t-out="object.date"/></li>
+                </ul>
+                <p>Please review and take action as soon as possible.</p>
+                <p>Thank you.</p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

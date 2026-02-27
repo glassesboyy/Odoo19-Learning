@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="asset_request_menu_root"
+              name="Asset Request"
+              web_icon="asset_request,static/description/icon.png"
+              sequence="90"/>
+
+    <!-- Submenu: Requests -->
+    <menuitem id="asset_request_menu_requests"
+              name="Requests"
+              parent="asset_request_menu_root"
+              sequence="10"/>
+
+    <menuitem id="asset_request_menu_all_requests"
+              name="Asset Requests"
+              parent="asset_request_menu_requests"
+              action="asset_request_action"
+              sequence="10"/>
+
+    <!-- Submenu: Configuration -->
+    <menuitem id="asset_request_menu_config"
+              name="Configuration"
+              parent="asset_request_menu_root"
+              groups="asset_request.group_approver_l1"
+              sequence="20"/>
+
+    <menuitem id="asset_request_menu_brands"
+              name="Brands"
+              parent="asset_request_menu_config"
+              action="asset_brand_action"
+              sequence="10"/>
+
+    <menuitem id="asset_request_menu_brand_models"
+              name="Brand Models"
+              parent="asset_request_menu_config"
+              action="asset_brand_model_action"
+              sequence="20"/>
+</odoo>

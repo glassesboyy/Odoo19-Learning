@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- ======================== -->
+    <!-- Brands                   -->
+    <!-- ======================== -->
+    <record id="brand_honda" model="asset.brand">
+        <field name="name">Honda</field>
+        <field name="category">standard</field>
+    </record>
+    <record id="brand_toyota" model="asset.brand">
+        <field name="name">Toyota</field>
+        <field name="category">standard</field>
+    </record>
+    <record id="brand_mitsubishi" model="asset.brand">
+        <field name="name">Mitsubishi</field>
+        <field name="category">standard</field>
+    </record>
+    <record id="brand_mazda" model="asset.brand">
+        <field name="name">Mazda</field>
+        <field name="category">standard</field>
+    </record>
+    <record id="brand_bmw" model="asset.brand">
+        <field name="name">BMW</field>
+        <field name="category">premium</field>
+    </record>
+    <record id="brand_mercedes" model="asset.brand">
+        <field name="name">Mercedes</field>
+        <field name="category">premium</field>
+    </record>
+
+    <!-- ======================== -->
+    <!-- Brand Models             -->
+    <!-- ======================== -->
+    <!-- Honda -->
+    <record id="model_honda_civic" model="asset.brand.model">
+        <field name="name">Civic</field>
+        <field name="brand_id" ref="brand_honda"/>
+    </record>
+    <record id="model_honda_crv" model="asset.brand.model">
+        <field name="name">CR-V</field>
+        <field name="brand_id" ref="brand_honda"/>
+    </record>
+    <record id="model_honda_hrv" model="asset.brand.model">
+        <field name="name">HR-V</field>
+        <field name="brand_id" ref="brand_honda"/>
+    </record>
+
+    <!-- Toyota -->
+    <record id="model_toyota_avanza" model="asset.brand.model">
+        <field name="name">Avanza</field>
+        <field name="brand_id" ref="brand_toyota"/>
+    </record>
+    <record id="model_toyota_innova" model="asset.brand.model">
+        <field name="name">Innova</field>
+        <field name="brand_id" ref="brand_toyota"/>
+    </record>
+    <record id="model_toyota_fortuner" model="asset.brand.model">
+        <field name="name">Fortuner</field>
+        <field name="brand_id" ref="brand_toyota"/>
+    </record>
+
+    <!-- Mitsubishi -->
+    <record id="model_mitsubishi_xpander" model="asset.brand.model">
+        <field name="name">Xpander</field>
+        <field name="brand_id" ref="brand_mitsubishi"/>
+    </record>
+    <record id="model_mitsubishi_pajero" model="asset.brand.model">
+        <field name="name">Pajero Sport</field>
+        <field name="brand_id" ref="brand_mitsubishi"/>
+    </record>
+
+    <!-- Mazda -->
+    <record id="model_mazda_cx5" model="asset.brand.model">
+        <field name="name">CX-5</field>
+        <field name="brand_id" ref="brand_mazda"/>
+    </record>
+    <record id="model_mazda_3" model="asset.brand.model">
+        <field name="name">Mazda3</field>
+        <field name="brand_id" ref="brand_mazda"/>
+    </record>
+
+    <!-- BMW -->
+    <record id="model_bmw_3series" model="asset.brand.model">
+        <field name="name">3 Series</field>
+        <field name="brand_id" ref="brand_bmw"/>
+    </record>
+    <record id="model_bmw_x3" model="asset.brand.model">
+        <field name="name">X3</field>
+        <field name="brand_id" ref="brand_bmw"/>
+    </record>
+    <record id="model_bmw_5series" model="asset.brand.model">
+        <field name="name">5 Series</field>
+        <field name="brand_id" ref="brand_bmw"/>
+    </record>
+
+    <!-- Mercedes -->
+    <record id="model_mercedes_cclass" model="asset.brand.model">
+        <field name="name">C-Class</field>
+        <field name="brand_id" ref="brand_mercedes"/>
+    </record>
+    <record id="model_mercedes_eclass" model="asset.brand.model">
+        <field name="name">E-Class</field>
+        <field name="brand_id" ref="brand_mercedes"/>
+    </record>
+    <record id="model_mercedes_glc" model="asset.brand.model">
+        <field name="name">GLC</field>
+        <field name="brand_id" ref="brand_mercedes"/>
+    </record>
+</odoo>

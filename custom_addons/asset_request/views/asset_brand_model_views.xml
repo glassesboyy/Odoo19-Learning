@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Brand Model List View -->
+    <record id="asset_brand_model_view_tree" model="ir.ui.view">
+        <field name="name">asset.brand.model.tree</field>
+        <field name="model">asset.brand.model</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="brand_id"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Brand Model Action -->
+    <record id="asset_brand_model_action" model="ir.actions.act_window">
+        <field name="name">Brand Models</field>
+        <field name="res_model">asset.brand.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
