@@ -14,9 +14,11 @@
         'data/asset_brand_data.xml',
         'data/mail_template_data.xml',
         'data/ir_cron_data.xml',
+        'data/asset_approval_config_data.xml',
         # Views
         'views/asset_brand_views.xml',
         'views/asset_brand_model_views.xml',
+        'views/asset_approval_config_views.xml',
         'views/asset_request_views.xml',
         'views/asset_request_menu.xml',
     ],

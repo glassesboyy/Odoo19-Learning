@@ -25,6 +25,93 @@
     </record>
 
     <!-- ============================================================ -->
+    <!-- Demo Users: Manager Level 1                                   -->
+    <!-- ============================================================ -->
+    <record id="demo_user_zul" model="res.users">
+        <field name="name">Zul</field>
+        <field name="login">zul</field>
+        <field name="password">zul</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
+    </record>
+
+    <record id="demo_user_jali" model="res.users">
+        <field name="name">Jali</field>
+        <field name="login">jali</field>
+        <field name="password">jali</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
+    </record>
+
+    <record id="demo_user_andri" model="res.users">
+        <field name="name">Andri</field>
+        <field name="login">andri</field>
+        <field name="password">andri</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
+    </record>
+
+    <record id="demo_user_figa" model="res.users">
+        <field name="name">Figa</field>
+        <field name="login">figa</field>
+        <field name="password">figa</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
+    </record>
+
+    <record id="demo_user_aji" model="res.users">
+        <field name="name">Aji</field>
+        <field name="login">aji</field>
+        <field name="password">aji</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Demo Users: Sr. Manager Level 2                               -->
+    <!-- ============================================================ -->
+    <record id="demo_user_vito" model="res.users">
+        <field name="name">Vito</field>
+        <field name="login">vito</field>
+        <field name="password">vito</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
+    </record>
+
+    <record id="demo_user_ardya" model="res.users">
+        <field name="name">Ardya</field>
+        <field name="login">ardya</field>
+        <field name="password">ardya</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
+    </record>
+
+    <record id="demo_user_luthfan" model="res.users">
+        <field name="name">Luthfan</field>
+        <field name="login">luthfan</field>
+        <field name="password">luthfan</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Demo Users: Director Level 3                                  -->
+    <!-- ============================================================ -->
+    <record id="demo_user_sheva" model="res.users">
+        <field name="name">Sheva</field>
+        <field name="login">sheva</field>
+        <field name="password">sheva</field>
+        <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l3'))]"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Demo Approval Configuration                                   -->
+    <!-- ============================================================ -->
+    <record id="asset_request.approval_config_level_1" model="asset.approval.config">
+        <field name="approver_id" ref="demo_user_joko"/>
+    </record>
+
+    <record id="asset_request.approval_config_level_2" model="asset.approval.config">
+        <field name="approver_id" ref="demo_user_wira"/>
+    </record>
+
+    <record id="asset_request.approval_config_level_3" model="asset.approval.config">
+        <field name="approver_id" ref="demo_user_reno"/>
+    </record>
+
+    <!-- ============================================================ -->
     <!-- Demo Partners (Requestors)                                    -->
     <!-- ============================================================ -->
     <record id="demo_partner_dept_it" model="res.partner">

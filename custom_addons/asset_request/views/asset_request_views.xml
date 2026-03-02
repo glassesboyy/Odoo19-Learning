@@ -61,12 +61,12 @@
                     </div>
                     <group>
                         <group>
-                            <field name="date"/>
-                            <field name="partner_id"/>
-                            <field name="request_type"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="request_type" readonly="state != 'draft'"/>
                         </group>
                         <group>
-                            <field name="required_date"/>
+                            <field name="required_date" readonly="state != 'draft'"/>
                             <field name="max_approval_level" string="Required Approval Level"/>
                             <field name="current_approval_level" string="Current Pending Level"/>
                         </group>

@@ -22,7 +22,7 @@
     <menuitem id="asset_request_menu_config"
               name="Configuration"
               parent="asset_request_menu_root"
-              groups="asset_request.group_approver_l1"
+              groups="asset_request.group_approver_l1,base.group_system"
               sequence="20"/>
 
     <menuitem id="asset_request_menu_brands"
@@ -36,4 +36,11 @@
               parent="asset_request_menu_config"
               action="asset_brand_model_action"
               sequence="20"/>
+
+    <menuitem id="asset_request_menu_approval_config"
+              name="Approval Configuration"
+              parent="asset_request_menu_config"
+              action="asset_approval_config_action"
+              groups="asset_request.group_approver_l3,base.group_system"
+              sequence="30"/>
 </odoo>

@@ -9,3 +9,5 @@ access_asset_brand_user,asset.brand.user,model_asset_brand,asset_request.group_a
 access_asset_brand_admin,asset.brand.admin,model_asset_brand,asset_request.group_approver_l3,1,1,1,1
 access_asset_brand_model_user,asset.brand.model.user,model_asset_brand_model,asset_request.group_asset_request_user,1,0,0,0
 access_asset_brand_model_admin,asset.brand.model.admin,model_asset_brand_model,asset_request.group_approver_l3,1,1,1,1
+access_asset_approval_config_user,asset.approval.config.user,model_asset_approval_config,asset_request.group_asset_request_user,1,0,0,0
+access_asset_approval_config_admin,asset.approval.config.admin,model_asset_approval_config,asset_request.group_approver_l3,1,1,0,0
