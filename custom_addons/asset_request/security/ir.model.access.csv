@@ -1,8 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_asset_request_user,asset.request.user,model_asset_request,asset_request.group_asset_request_user,1,1,1,0
-access_asset_request_approver,asset.request.approver,model_asset_request,asset_request.group_approver_l1,1,1,1,1
+access_asset_request_user,asset.request.user,model_asset_request,asset_request.group_asset_request_user,1,1,0,0
+access_asset_request_admin,asset.request.admin,model_asset_request,asset_request.group_asset_request_admin,1,1,1,1
 access_asset_request_line_user,asset.request.line.user,model_asset_request_line,asset_request.group_asset_request_user,1,1,1,1
-access_asset_request_line_approver,asset.request.line.approver,model_asset_request_line,asset_request.group_approver_l1,1,1,1,1
 access_asset_request_approval_user,asset.request.approval.user,model_asset_request_approval,asset_request.group_asset_request_user,1,0,0,0
 access_asset_request_approval_approver,asset.request.approval.approver,model_asset_request_approval,asset_request.group_approver_l1,1,1,1,1
 access_asset_brand_user,asset.brand.user,model_asset_brand,asset_request.group_asset_request_user,1,0,0,0

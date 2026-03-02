@@ -7,6 +7,7 @@
         <field name="name">Joko</field>
         <field name="login">joko</field>
         <field name="password">joko</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
     </record>
 
@@ -14,6 +15,7 @@
         <field name="name">Wira</field>
         <field name="login">wira</field>
         <field name="password">wira</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
     </record>
 
@@ -21,6 +23,7 @@
         <field name="name">Reno</field>
         <field name="login">reno</field>
         <field name="password">reno</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l3'))]"/>
     </record>
 
@@ -31,6 +34,7 @@
         <field name="name">Zul</field>
         <field name="login">zul</field>
         <field name="password">zul</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
     </record>
 
@@ -38,6 +42,7 @@
         <field name="name">Jali</field>
         <field name="login">jali</field>
         <field name="password">jali</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
     </record>
 
@@ -45,6 +50,7 @@
         <field name="name">Andri</field>
         <field name="login">andri</field>
         <field name="password">andri</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
     </record>
 
@@ -52,6 +58,7 @@
         <field name="name">Figa</field>
         <field name="login">figa</field>
         <field name="password">figa</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
     </record>
 
@@ -59,6 +66,7 @@
         <field name="name">Aji</field>
         <field name="login">aji</field>
         <field name="password">aji</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l1'))]"/>
     </record>
 
@@ -69,6 +77,7 @@
         <field name="name">Vito</field>
         <field name="login">vito</field>
         <field name="password">vito</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
     </record>
 
@@ -76,6 +85,7 @@
         <field name="name">Ardya</field>
         <field name="login">ardya</field>
         <field name="password">ardya</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
     </record>
 
@@ -83,6 +93,7 @@
         <field name="name">Luthfan</field>
         <field name="login">luthfan</field>
         <field name="password">luthfan</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l2'))]"/>
     </record>
 
@@ -93,6 +104,7 @@
         <field name="name">Sheva</field>
         <field name="login">sheva</field>
         <field name="password">sheva</field>
+        <field name="email">suryazulfikar22@gmail.com</field>
         <field name="group_ids" eval="[(4, ref('asset_request.group_approver_l3'))]"/>
     </record>
 

@@ -41,14 +41,16 @@
                             invisible="state != 'draft'"/>
                     <button name="action_approve" type="object" string="Approve"
                             class="oe_highlight"
-                            invisible="state != 'waiting_approval'"
+                            invisible="state != 'waiting_approval' or not is_current_approver"
                             groups="asset_request.group_approver_l1"/>
                     <button name="action_reject" type="object" string="Reject"
                             class="btn-danger"
-                            invisible="state != 'waiting_approval'"
+                            invisible="state != 'waiting_approval' or not is_current_approver"
                             groups="asset_request.group_approver_l1"/>
+                    <field name="is_current_approver" invisible="1"/>
+                    <field name="can_reset_to_draft" invisible="1"/>
                     <button name="action_reset_to_draft" type="object" string="Reset to Draft"
-                            invisible="state not in ['waiting_approval', 'rejected']"/>
+                            invisible="not can_reset_to_draft"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,waiting_approval,approved"/>
                 </header>
@@ -70,6 +72,15 @@
                             <field name="max_approval_level" string="Required Approval Level"/>
                             <field name="current_approval_level" string="Current Pending Level"/>
                         </group>
+                    </group>
+                    <group>
+                        <field name="notes" readonly="state != 'draft'"
+                               placeholder="Additional notes or remarks..."/>
+                    </group>
+                    <group>
+                        <field name="attachment" filename="attachment_filename"
+                               readonly="state != 'draft'"/>
+                        <field name="attachment_filename" invisible="1"/>
                     </group>
                     <notebook>
                         <page string="Request Lines">
@@ -94,7 +105,6 @@
                                            decoration-danger="status == 'rejected'"
                                            decoration-warning="status == 'pending'"/>
                                     <field name="date"/>
-                                    <field name="remarks"/>
                                 </list>
                             </field>
                         </page>

@@ -10,6 +10,12 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
+    <!-- Admin — can create / reset Asset Requests -->
+    <record id="group_asset_request_admin" model="res.groups">
+        <field name="name">Asset Request Admin</field>
+        <field name="implied_ids" eval="[(4, ref('group_asset_request_user'))]"/>
+    </record>
+
     <!-- L1 - Manager -->
     <record id="group_approver_l1" model="res.groups">
         <field name="name">Asset Request Approver Level 1 - Manager</field>
