@@ -100,15 +100,15 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Title"/>
+                <field name="name" string="Title" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area"/>
+                <field name="living_area" filter_domain="[('living_area', '&gt;=', self)]"/>
                 <field name="facades"/>
                 <field name="property_type_id"/>
-                <!-- <filter string="Available" name="available" 
-                        domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/> -->
+                <filter string="Available" name="available"
+                        domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/>
                 <separator/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <group>
