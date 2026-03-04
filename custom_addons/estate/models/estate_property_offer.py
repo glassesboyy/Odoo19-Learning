@@ -64,3 +64,20 @@ class EstatePropertyOffer(models.Model):
     def action_refuse(self):
         for record in self:
             record.status = 'refused'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            property_id = vals.get('property_id')
+            if property_id:
+                property_obj = self.env['estate.property'].browse(property_id)
+                # Raise error if the new offer is lower than an existing offer
+                if property_obj.offer_ids:
+                    max_existing = max(property_obj.offer_ids.mapped('price'))
+                    if vals.get('price', 0) < max_existing:
+                        raise UserError(
+                            f"Cannot create an offer lower than the existing best offer of {max_existing}."
+                        )
+                # Set the property state to 'Offer Received'
+                property_obj.state = 'offer_received'
+        return super().create(vals_list)

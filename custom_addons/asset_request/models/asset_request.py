@@ -312,8 +312,11 @@ class AssetRequest(models.Model):
         if not approver:
             return
 
-        # Schedule activity for the assigned approver
-        self.activity_schedule(
+        # Schedule activity for the assigned approver.
+        # Use mail_activity_quick_update=True to suppress the automatic inbox/email
+        # notification that activity_schedule() would otherwise trigger — we send
+        # our own richer email via the template below, so we don't want duplicates.
+        self.with_context(mail_activity_quick_update=True).activity_schedule(
             'mail.mail_activity_data_todo',
             user_id=approver.id,
             note=_(

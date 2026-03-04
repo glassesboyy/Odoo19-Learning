@@ -90,6 +90,7 @@
                     </notebook>
                     <field name="active" invisible="1"/>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

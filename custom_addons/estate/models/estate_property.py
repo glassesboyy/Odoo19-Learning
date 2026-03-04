@@ -6,6 +6,7 @@ class EstateProperty(models.Model):
     _name = 'estate.property'
     _description = 'Real Estate Property'
     _order = 'id desc'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     
     _sql_constraints = [
         ('check_expected_price_positive', 'CHECK(expected_price > 0)', 'Expected price must be strictly positive.'),
@@ -40,7 +41,7 @@ class EstateProperty(models.Model):
         ('offer_accepted', 'Offer Accepted'),
         ('sold', 'Sold'),
         ('canceled', 'Canceled'),
-    ], required=True, copy=False, default='new')
+    ], required=True, copy=False, default='new', tracking=True)
     
     # Relational Fields
     property_type_id = fields.Many2one('estate.property.type', string='Property Type')
@@ -98,6 +99,14 @@ class EstateProperty(models.Model):
             if record.state == 'canceled':
                 raise UserError("Canceled property cannot be sold.")
             record.state = 'sold'
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_new_or_canceled(self):
+        for record in self:
+            if record.state not in ('new', 'canceled'):
+                raise UserError(
+                    f"Cannot delete property '{record.name}': only properties with state 'New' or 'Canceled' can be deleted."
+                )
     
     # Python Constraints
     @api.constrains('selling_price', 'expected_price')
