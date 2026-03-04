@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_loan_amortization_user,loan.amortization.user,model_loan_amortization,loan_amortization.group_loan_user,1,1,1,0
+access_loan_amortization_manager,loan.amortization.manager,model_loan_amortization,loan_amortization.group_loan_manager,1,1,1,1
+access_loan_amortization_line_user,loan.amortization.line.user,model_loan_amortization_line,loan_amortization.group_loan_user,1,1,1,1
+access_loan_amortization_line_manager,loan.amortization.line.manager,model_loan_amortization_line,loan_amortization.group_loan_manager,1,1,1,1

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_loan_amortization">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Title -->
+                        <h2 class="text-center">Loan Amortization Schedule</h2>
+                        <h4 class="text-center text-muted">
+                            <t t-out="doc.name"/>
+                        </h4>
+
+                        <br/>
+
+                        <!-- Loan Information -->
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td class="fw-bold" style="width: 40%;">Borrower</td>
+                                        <td><t t-out="doc.partner_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Principal</td>
+                                        <td>
+                                            <t t-out="doc.principal"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Term</td>
+                                        <td><t t-out="doc.term_years"/> year(s) (<t t-out="doc.number_of_months"/> months)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Start Date</td>
+                                        <td><t t-out="doc.start_date" t-options="{'widget': 'date'}"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td class="fw-bold" style="width: 40%;">Annual Rate</td>
+                                        <td><t t-out="'%.4f' % doc.annual_rate_display"/>%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Monthly Rate</td>
+                                        <td><t t-out="'%.12f' % doc.monthly_rate"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Monthly Payment</td>
+                                        <td>
+                                            <t t-out="doc.monthly_payment"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Status</td>
+                                        <td><t t-out="doc.state"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Amortization Schedule Table -->
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 6%;">#</th>
+                                    <th style="width: 14%;">Date</th>
+                                    <th class="text-end" style="width: 16%;">Payment</th>
+                                    <th class="text-end" style="width: 14%;">Interest Rate</th>
+                                    <th class="text-end" style="width: 16%;">Interest Amount</th>
+                                    <th class="text-end" style="width: 16%;">Net Deduction</th>
+                                    <th class="text-end" style="width: 18%;">Remaining Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="total_payment" t-value="0"/>
+                                <t t-set="total_interest" t-value="0"/>
+                                <t t-set="total_principal" t-value="0"/>
+                                <t t-foreach="doc.line_ids" t-as="line">
+                                    <t t-set="total_payment" t-value="total_payment + line.payment"/>
+                                    <t t-set="total_interest" t-value="total_interest + line.interest_amount"/>
+                                    <t t-set="total_principal" t-value="total_principal + line.net_deduction"/>
+                                    <tr>
+                                        <td class="text-center">
+                                            <t t-out="line.sequence"/>
+                                        </td>
+                                        <td>
+                                            <t t-out="line.date" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-out="line.payment"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-out="'%.12f' % line.interest_rate"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-out="line.interest_amount"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-out="line.net_deduction"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-out="line.remaining_balance"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Summary -->
+                        <div class="row mt-4">
+                            <div class="col-6 offset-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td class="fw-bold">Total Payment</td>
+                                        <td class="text-end">
+                                            <t t-out="doc.total_payment"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Total Interest</td>
+                                        <td class="text-end">
+                                            <t t-out="doc.total_interest"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <td class="fw-bold">Principal</td>
+                                        <td class="text-end">
+                                            <t t-out="doc.principal"
+                                               t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

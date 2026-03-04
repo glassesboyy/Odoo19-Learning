@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Demo Borrower -->
+        <record id="demo_partner_borrower" model="res.partner">
+            <field name="name">PT. Maju Jaya Leasing</field>
+            <field name="company_type">company</field>
+            <field name="email">leasing@majujaya.com</field>
+            <field name="phone">+62-21-5551234</field>
+        </record>
+
+        <!-- Demo Loan: matches the Week 2 exercise parameters -->
+        <record id="demo_loan_01" model="loan.amortization">
+            <field name="partner_id" ref="demo_partner_borrower"/>
+            <field name="principal">200000.00</field>
+            <field name="term_years">2</field>
+            <field name="annual_rate_display">7.0</field>
+            <field name="start_date">2026-02-01</field>
+        </record>
+
+    </data>
+</odoo>

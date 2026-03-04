@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Root Menu -->
+    <menuitem id="loan_amortization_menu_root"
+              name="Loan Amortization"
+              web_icon="loan_amortization,static/description/icon.png"
+              sequence="95"/>
+
+    <!-- Sub Menu: Loans -->
+    <menuitem id="loan_amortization_menu_loans"
+              name="Loans"
+              parent="loan_amortization_menu_root"
+              sequence="10"/>
+
+    <!-- Action Menu Item -->
+    <menuitem id="loan_amortization_menu_all_loans"
+              name="All Loans"
+              parent="loan_amortization_menu_loans"
+              action="loan_amortization_action"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!--                        FORM VIEW                             -->
+    <!-- ============================================================ -->
+    <record id="loan_amortization_view_form" model="ir.ui.view">
+        <field name="name">loan.amortization.form</field>
+        <field name="model">loan.amortization</field>
+        <field name="arch" type="xml">
+            <form string="Loan Amortization">
+                <header>
+                    <button name="action_generate_schedule"
+                            string="Generate Schedule"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            icon="fa-calculator"/>
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft' or line_count == 0"/>
+                    <button name="action_done"
+                            string="Done"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_reset_to_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            invisible="state not in ('confirmed', 'done')"
+                            confirm="This will clear the amortization schedule. Continue?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Loan Information">
+                            <field name="partner_id"
+                                   readonly="state != 'draft'"
+                                   widget="many2one_avatar"/>
+                            <field name="principal"
+                                   readonly="state != 'draft'"/>
+                            <field name="term_years"
+                                   readonly="state != 'draft'"/>
+                            <field name="annual_rate_display"
+                                   readonly="state != 'draft'"/>
+                            <field name="start_date"
+                                   readonly="state != 'draft'"/>
+                            <field name="currency_id"
+                                   readonly="state != 'draft'"
+                                   groups="base.group_multi_currency"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group string="Calculated Values">
+                            <field name="number_of_months"/>
+                            <field name="annual_rate" invisible="1"/>
+                            <field name="monthly_rate"/>
+                            <field name="monthly_payment"/>
+                            <field name="total_payment"/>
+                            <field name="total_interest"/>
+                            <field name="line_count" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Amortization Schedule" name="schedule">
+                            <field name="line_ids" readonly="1" nolabel="1">
+                                <list>
+                                    <field name="sequence" string="Month #"/>
+                                    <field name="date"/>
+                                    <field name="payment" sum="Total Payment"/>
+                                    <field name="interest_rate"/>
+                                    <field name="interest_amount" sum="Total Interest"/>
+                                    <field name="net_deduction" sum="Total Principal"/>
+                                    <field name="remaining_balance"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--                        LIST VIEW                             -->
+    <!-- ============================================================ -->
+    <record id="loan_amortization_view_list" model="ir.ui.view">
+        <field name="name">loan.amortization.list</field>
+        <field name="model">loan.amortization</field>
+        <field name="arch" type="xml">
+            <list string="Loan Amortizations"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'confirmed'"
+                  decoration-muted="state == 'done'">
+                <field name="name"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="principal"/>
+                <field name="term_years"/>
+                <field name="annual_rate_display" string="Rate (%)"/>
+                <field name="monthly_payment"/>
+                <field name="start_date"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"
+                       decoration-muted="state == 'done'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--                       SEARCH VIEW                            -->
+    <!-- ============================================================ -->
+    <record id="loan_amortization_view_search" model="ir.ui.view">
+        <field name="name">loan.amortization.search</field>
+        <field name="model">loan.amortization</field>
+        <field name="arch" type="xml">
+            <search string="Search Loans">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter string="Draft" name="filter_draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="filter_confirmed"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Done" name="filter_done"
+                        domain="[('state', '=', 'done')]"/>
+                <group>
+                    <filter string="Status" name="group_by_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Borrower" name="group_by_partner"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter string="Start Date" name="group_by_start_date"
+                            context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--                        ACTION                                -->
+    <!-- ============================================================ -->
+    <record id="loan_amortization_action" model="ir.actions.act_window">
+        <field name="name">Loan Amortizations</field>
+        <field name="res_model">loan.amortization</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="loan_amortization_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first loan amortization
+            </p>
+            <p>
+                Calculate amortization schedules based on loan parameters such as
+                principal, interest rate, and term.
+            </p>
+        </field>
+    </record>
+
+</odoo>
