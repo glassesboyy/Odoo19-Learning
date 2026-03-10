@@ -16,6 +16,20 @@
                             class="btn-primary"
                             invisible="state != 'draft'"
                             icon="fa-calculator"/>
+                    <button name="action_create_journal_entries"
+                            string="Create Journal Entries"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ('confirmed', 'done') or line_count == 0"
+                            icon="fa-book"
+                            confirm="This will create journal entries for all schedule lines without one. Continue?"/>
+                    <button name="action_post_journal_entries"
+                            string="Post Journal Entries"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ('confirmed', 'done') or move_count == 0"
+                            icon="fa-check"
+                            confirm="This will post all draft journal entries. Continue?"/>
                     <button name="action_confirm"
                             string="Confirm"
                             type="object"
@@ -35,6 +49,16 @@
                            statusbar_visible="draft,confirmed,done"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_journal_entries"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book"
+                                invisible="move_count == 0">
+                            <field name="move_count" widget="statinfo"
+                                   string="Journal Entries"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -42,7 +66,7 @@
                     </div>
                     <group>
                         <group string="Loan Information">
-                            <field name="partner_id"
+                            <field name="partner_id" string="Company"
                                    readonly="state != 'draft'"
                                    widget="many2one_avatar"/>
                             <field name="principal"
@@ -52,7 +76,8 @@
                             <field name="annual_rate_display"
                                    readonly="state != 'draft'"/>
                             <field name="start_date"
-                                   readonly="state != 'draft'"/>
+                                   readonly="state != 'draft'"
+                                   options="{'numeric': True}"/>
                             <field name="currency_id"
                                    readonly="state != 'draft'"
                                    groups="base.group_multi_currency"/>
@@ -72,15 +97,47 @@
                         <page string="Amortization Schedule" name="schedule">
                             <field name="line_ids" readonly="1" nolabel="1">
                                 <list>
-                                    <field name="sequence" string="Month #"/>
-                                    <field name="date"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="sequence" string="Month"/>
+                                    <field name="date" options="{'numeric': True}"/>
                                     <field name="payment" sum="Total Payment"/>
                                     <field name="interest_rate"/>
                                     <field name="interest_amount" sum="Total Interest"/>
                                     <field name="net_deduction" sum="Total Principal"/>
                                     <field name="remaining_balance"/>
+                                    <field name="move_id" string="Journal Entry"
+                                           optional="show"/>
+                                    <field name="move_state" string="Entry Status"
+                                           widget="badge"
+                                           decoration-info="move_state == 'draft'"
+                                           decoration-success="move_state == 'posted'"
+                                           optional="show"/>
                                 </list>
                             </field>
+                        </page>
+                        <page string="Accounting" name="accounting">
+                            <group>
+                                <group string="Journal">
+                                    <field name="journal_id"
+                                           readonly="state == 'done'"
+                                           required="state in ('confirmed', 'done')"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Debit Accounts">
+                                    <field name="leasing_payable_account_id"
+                                           readonly="state == 'done'"
+                                           required="state in ('confirmed', 'done')"/>
+                                    <field name="interest_expense_account_id"
+                                           readonly="state == 'done'"
+                                           required="state in ('confirmed', 'done')"/>
+                                </group>
+                                <group string="Credit Account">
+                                    <field name="accounts_payable_account_id"
+                                           readonly="state == 'done'"
+                                           required="state in ('confirmed', 'done')"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -101,12 +158,12 @@
                   decoration-success="state == 'confirmed'"
                   decoration-muted="state == 'done'">
                 <field name="name"/>
-                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="partner_id" string="Company" widget="many2one_avatar"/>
                 <field name="principal"/>
                 <field name="term_years"/>
                 <field name="annual_rate_display" string="Rate (%)"/>
-                <field name="monthly_payment"/>
-                <field name="start_date"/>
+                <field name="monthly_payment" string="Monthly Payment ($)"/>
+                <field name="start_date" options="{'numeric': True}"/>
                 <field name="state"
                        widget="badge"
                        decoration-info="state == 'draft'"
@@ -136,7 +193,7 @@
                 <group>
                     <filter string="Status" name="group_by_state"
                             context="{'group_by': 'state'}"/>
-                    <filter string="Borrower" name="group_by_partner"
+                    <filter string="Company" name="group_by_partner"
                             context="{'group_by': 'partner_id'}"/>
                     <filter string="Start Date" name="group_by_start_date"
                             context="{'group_by': 'start_date:month'}"/>

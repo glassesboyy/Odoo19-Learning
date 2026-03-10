@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
 from odoo.exceptions import UserError, ValidationError
 from dateutil.relativedelta import relativedelta
 
@@ -40,7 +40,7 @@ class LoanAmortization(models.Model):
     )
     company_id = fields.Many2one(
         'res.company',
-        string='Company',
+        string='Internal Company',
         required=True,
         default=lambda self: self.env.company,
     )
@@ -54,12 +54,12 @@ class LoanAmortization(models.Model):
     # === Loan Parameters (User Input) ===
     partner_id = fields.Many2one(
         'res.partner',
-        string='Borrower',
+        string='Company',
         required=True,
         tracking=True,
     )
     principal = fields.Monetary(
-        string='Principal (P)',
+        string='Principal ($)',
         required=True,
         tracking=True,
         currency_field='currency_id',
@@ -105,19 +105,19 @@ class LoanAmortization(models.Model):
         digits=(16, 12),
     )
     monthly_payment = fields.Monetary(
-        string='Monthly Payment',
+        string='Monthly Payment ($)',
         compute='_compute_monthly_payment',
         store=True,
         currency_field='currency_id',
     )
     total_payment = fields.Monetary(
-        string='Total Payment',
+        string='Total Payment ($)',
         compute='_compute_totals',
         store=True,
         currency_field='currency_id',
     )
     total_interest = fields.Monetary(
-        string='Total Interest',
+        string='Total Interest ($)',
         compute='_compute_totals',
         store=True,
         currency_field='currency_id',
@@ -133,6 +133,40 @@ class LoanAmortization(models.Model):
     line_count = fields.Integer(
         string='Schedule Lines',
         compute='_compute_line_count',
+    )
+
+    # === Accounting Configuration ===
+    journal_id = fields.Many2one(
+        'account.journal',
+        string='Journal',
+        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
+        help='Miscellaneous journal used for lease payment entries.',
+        tracking=True,
+    )
+    leasing_payable_account_id = fields.Many2one(
+        'account.account',
+        string='Leasing Payable Account',
+        domain="[('company_ids', 'in', company_id)]",
+        help='Debit account for the principal (leasing payable) portion.',
+        tracking=True,
+    )
+    interest_expense_account_id = fields.Many2one(
+        'account.account',
+        string='Interest Expense Account',
+        domain="[('company_ids', 'in', company_id)]",
+        help='Debit account for the interest expense portion.',
+        tracking=True,
+    )
+    accounts_payable_account_id = fields.Many2one(
+        'account.account',
+        string='Accounts Payable for Lease',
+        domain="[('company_ids', 'in', company_id)]",
+        help='Credit account for the total lease payment (accounts payable).',
+        tracking=True,
+    )
+    move_count = fields.Integer(
+        string='Journal Entries',
+        compute='_compute_move_count',
     )
 
     # === Compute Methods ===
@@ -204,6 +238,11 @@ class LoanAmortization(models.Model):
     def _compute_line_count(self):
         for loan in self:
             loan.line_count = len(loan.line_ids)
+
+    @api.depends('line_ids.move_id')
+    def _compute_move_count(self):
+        for loan in self:
+            loan.move_count = len(loan.line_ids.mapped('move_id'))
 
     # === Constraints ===
 
@@ -335,6 +374,169 @@ class LoanAmortization(models.Model):
             if loan.state not in ('confirmed', 'done'):
                 raise UserError(_('Only confirmed or done loans can be reset.'))
 
+            # Cancel and unlink related journal entries that are still in draft
+            moves = loan.line_ids.mapped('move_id')
+            draft_moves = moves.filtered(lambda m: m.state == 'draft')
+            posted_moves = moves.filtered(lambda m: m.state == 'posted')
+
+            if posted_moves:
+                raise UserError(_(
+                    'Cannot reset to draft: %d journal entries have already been posted. '
+                    'Please cancel or reverse them first.',
+                    len(posted_moves),
+                ))
+
+            if draft_moves:
+                # Unlink the move reference from lines first
+                loan.line_ids.filtered(
+                    lambda l: l.move_id in draft_moves
+                ).write({'move_id': False})
+                draft_moves.unlink()
+
             loan.line_ids.unlink()
             loan.write({'state': 'draft'})
             loan.message_post(body=_('Loan reset to draft. Schedule cleared.'))
+
+    # === Journal Entry Methods ===
+
+    def action_create_journal_entries(self):
+        """Create journal entries for all schedule lines that don't have one yet."""
+        for loan in self:
+            if loan.state not in ('confirmed', 'done'):
+                raise UserError(_(
+                    'Journal entries can only be created for confirmed or done loans.'
+                ))
+            if not loan.line_ids:
+                raise UserError(_('No amortization schedule lines found.'))
+
+            # Validate accounting configuration
+            if not loan.journal_id:
+                raise UserError(_(
+                    'Please configure the Journal in the Accounting tab before '
+                    'generating journal entries.'
+                ))
+            if not loan.leasing_payable_account_id:
+                raise UserError(_(
+                    'Please configure the Leasing Payable Account in the Accounting tab.'
+                ))
+            if not loan.interest_expense_account_id:
+                raise UserError(_(
+                    'Please configure the Interest Expense Account in the Accounting tab.'
+                ))
+            if not loan.accounts_payable_account_id:
+                raise UserError(_(
+                    'Please configure the Accounts Payable for Lease in the Accounting tab.'
+                ))
+
+            # Filter lines that don't have a journal entry yet
+            lines_to_process = loan.line_ids.filtered(lambda l: not l.move_id)
+            if not lines_to_process:
+                raise UserError(_(
+                    'All schedule lines already have journal entries.'
+                ))
+
+            created_moves = self.env['account.move']
+            for line in lines_to_process:
+                move_vals = loan._prepare_move_values(line)
+                move = self.env['account.move'].create(move_vals)
+                line.write({'move_id': move.id})
+                created_moves |= move
+
+            loan.message_post(
+                body=_(
+                    'Created %d journal entries for amortization schedule.',
+                    len(created_moves),
+                ),
+            )
+
+        return True
+
+    def _prepare_move_values(self, line):
+        """Prepare the values for creating a journal entry from a schedule line.
+
+        Journal entry structure:
+            - Debit: Leasing Payable (principal / net_deduction)
+            - Debit: Interest Expense (interest_amount)
+            - Credit: Accounts Payable for Lease (payment = principal + interest)
+        """
+        self.ensure_one()
+        return {
+            'move_type': 'entry',
+            'journal_id': self.journal_id.id,
+            'date': line.date,
+            'ref': _('%(loan)s - Payment %(month)d/%(total)d',
+                     loan=self.name, month=line.sequence, total=self.number_of_months),
+            'partner_id': self.partner_id.id,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'line_ids': [
+                # Debit: Leasing Payable (principal portion)
+                Command.create({
+                    'name': _('Leasing Payable - %(loan)s Month %(month)d',
+                             loan=self.name, month=line.sequence),
+                    'account_id': self.leasing_payable_account_id.id,
+                    'partner_id': self.partner_id.id,
+                    'debit': line.net_deduction,
+                    'credit': 0.0,
+                    'currency_id': self.currency_id.id,
+                }),
+                # Debit: Interest Expense
+                Command.create({
+                    'name': _('Interest Expense - %(loan)s Month %(month)d',
+                             loan=self.name, month=line.sequence),
+                    'account_id': self.interest_expense_account_id.id,
+                    'partner_id': self.partner_id.id,
+                    'debit': line.interest_amount,
+                    'credit': 0.0,
+                    'currency_id': self.currency_id.id,
+                }),
+                # Credit: Accounts Payable for Lease
+                Command.create({
+                    'name': _('Accounts Payable - %(loan)s Month %(month)d',
+                             loan=self.name, month=line.sequence),
+                    'account_id': self.accounts_payable_account_id.id,
+                    'partner_id': self.partner_id.id,
+                    'debit': 0.0,
+                    'credit': line.payment,
+                    'currency_id': self.currency_id.id,
+                }),
+            ],
+        }
+
+    def action_post_journal_entries(self):
+        """Post all draft journal entries linked to this loan's schedule."""
+        for loan in self:
+            if loan.state not in ('confirmed', 'done'):
+                raise UserError(_(
+                    'Journal entries can only be posted for confirmed or done loans.'
+                ))
+
+            draft_moves = loan.line_ids.mapped('move_id').filtered(
+                lambda m: m.state == 'draft'
+            )
+            if not draft_moves:
+                raise UserError(_('No draft journal entries to post.'))
+
+            draft_moves.action_post()
+            loan.message_post(
+                body=_('Posted %d journal entries.', len(draft_moves)),
+            )
+
+    def action_view_journal_entries(self):
+        """Open the list of journal entries linked to this loan."""
+        self.ensure_one()
+        moves = self.line_ids.mapped('move_id')
+        action = {
+            'name': _('Journal Entries'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', moves.ids)],
+            'context': {'default_move_type': 'entry'},
+        }
+        if len(moves) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': moves.id,
+            })
+        return action

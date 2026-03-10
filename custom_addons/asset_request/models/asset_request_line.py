@@ -11,12 +11,26 @@ class AssetRequestLine(models.Model):
     ]
 
     request_id = fields.Many2one('asset.request', required=True, ondelete='cascade')
+    sequence = fields.Integer(string='No', compute='_compute_sequence')
     brand_id = fields.Many2one('asset.brand', required=True)
     model_id = fields.Many2one(
         'asset.brand.model', required=True,
         domain="[('brand_id', '=', brand_id)]",
     )
     quantity = fields.Integer(required=True, default=1)
+
+    @api.depends('request_id.line_ids')
+    def _compute_sequence(self):
+        for line in self:
+            if not line.request_id:
+                line.sequence = 0
+                continue
+            for idx, sibling in enumerate(line.request_id.line_ids, 1):
+                if sibling == line:
+                    line.sequence = idx
+                    break
+            else:
+                line.sequence = 0
 
     @api.onchange('brand_id')
     def _onchange_brand_id(self):

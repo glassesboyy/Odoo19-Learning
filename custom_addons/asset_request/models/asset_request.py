@@ -23,6 +23,11 @@ class AssetRequest(models.Model):
         default=lambda self: _('New'),
         readonly=True, copy=False, tracking=True,
     )
+    description = fields.Text(
+        string='Description',
+        help='Description or purpose of this asset request.',
+        tracking=True,
+    )
     date = fields.Date(
         default=fields.Date.today, required=True, tracking=True,
     )
@@ -44,7 +49,11 @@ class AssetRequest(models.Model):
     # === Additional Fields ===
     attachment = fields.Binary(string='Attachment', attachment=True)
     attachment_filename = fields.Char(string='Attachment Filename')
-    notes = fields.Text(string='Notes / Remarks')
+    notes = fields.Text(string='Notes')
+    current_cycle = fields.Integer(
+        string='Current Cycle', default=0, copy=False,
+        help='Tracks the current approval cycle number.',
+    )
 
     # === Relational Fields ===
     line_ids = fields.One2many('asset.request.line', 'request_id', string='Request Lines')
@@ -90,20 +99,24 @@ class AssetRequest(models.Model):
                     max_level = level
             rec.max_approval_level = max_level
 
-    @api.depends('approval_ids.status')
+    @api.depends('approval_ids.status', 'current_cycle')
     def _compute_current_approval_level(self):
         for rec in self:
-            pending = rec.approval_ids.filtered(lambda a: a.status == 'pending')
-            rec.current_approval_level = min(pending.mapped('level'), default=0)
+            current_approvals = rec.approval_ids.filtered(
+                lambda a: a.cycle == rec.current_cycle and a.status == 'pending'
+            )
+            rec.current_approval_level = min(current_approvals.mapped('level'), default=0)
 
-    @api.depends('state', 'current_approval_level', 'approval_ids.approver_id', 'approval_ids.status')
+    @api.depends('state', 'current_approval_level', 'approval_ids.approver_id', 'approval_ids.status', 'current_cycle')
     def _compute_is_current_approver(self):
         for rec in self:
             if rec.state != 'waiting_approval' or not rec.current_approval_level:
                 rec.is_current_approver = False
                 continue
             approval = rec.approval_ids.filtered(
-                lambda a: a.level == rec.current_approval_level and a.status == 'pending'
+                lambda a: a.cycle == rec.current_cycle
+                    and a.level == rec.current_approval_level
+                    and a.status == 'pending'
             )
             rec.is_current_approver = bool(approval and approval.approver_id == self.env.user)
 
@@ -144,8 +157,11 @@ class AssetRequest(models.Model):
                         level,
                     ))
 
-            # Generate approval records (sudo: system operation)
-            rec.approval_ids.sudo().unlink()
+            # Increment cycle — old approval records are kept as history
+            new_cycle = rec.current_cycle + 1
+            rec.current_cycle = new_cycle
+
+            # Generate new approval records for the new cycle (sudo: system operation)
             ApprovalSudo = self.env['asset.request.approval'].sudo()
             for level in range(1, rec.max_approval_level + 1):
                 info = APPROVAL_LEVEL_MAP[level]
@@ -154,6 +170,7 @@ class AssetRequest(models.Model):
                 )
                 ApprovalSudo.create({
                     'request_id': rec.id,
+                    'cycle': new_cycle,
                     'level': level,
                     'role': info['role'],
                     'approver_id': config.approver_id.id if config.approver_id else False,
@@ -161,7 +178,10 @@ class AssetRequest(models.Model):
                 })
 
             rec.state = 'waiting_approval'
-            rec.message_post(body=_("Request submitted for approval. Required level: %s", rec.max_approval_level))
+            rec.message_post(body=_(
+                "Request submitted for approval (Cycle %s). Required level: %s",
+                new_cycle, rec.max_approval_level,
+            ))
 
             # Notify approvers for the first level
             rec._notify_current_approvers()
@@ -177,9 +197,11 @@ class AssetRequest(models.Model):
 
             rec._check_can_approve(current_level)
 
-            # Update approval record (sudo: system operation)
+            # Update approval record in current cycle (sudo: system operation)
             approval = rec.approval_ids.filtered(
-                lambda a: a.level == current_level and a.status == 'pending'
+                lambda a: a.cycle == rec.current_cycle
+                    and a.level == current_level
+                    and a.status == 'pending'
             )
             approval.sudo().write({
                 'status': 'approved',
@@ -187,19 +209,21 @@ class AssetRequest(models.Model):
                 'date': fields.Datetime.now(),
             })
             rec.message_post(body=_(
-                "Level %s approved by %s (%s).",
-                current_level, self.env.user.name,
+                "Cycle %s — Level %s approved by %s (%s).",
+                rec.current_cycle, current_level, self.env.user.name,
                 APPROVAL_LEVEL_MAP[current_level]['role'],
             ))
 
             # Unlink activity for this approver
             rec.activity_unlink(['mail.mail_activity_data_todo'])
 
-            # Check if all levels done
-            remaining = rec.approval_ids.filtered(lambda a: a.status == 'pending')
+            # Check if all levels done in current cycle
+            remaining = rec.approval_ids.filtered(
+                lambda a: a.cycle == rec.current_cycle and a.status == 'pending'
+            )
             if not remaining:
                 rec.state = 'approved'
-                rec.message_post(body=_("Request fully approved."))
+                rec.message_post(body=_("Request fully approved (Cycle %s).", rec.current_cycle))
             else:
                 # Notify next level approvers
                 rec._notify_current_approvers()
@@ -215,9 +239,11 @@ class AssetRequest(models.Model):
 
             rec._check_can_approve(current_level)
 
-            # Update current approval (sudo: system operation)
+            # Update current approval as rejected (sudo: system operation)
             approval = rec.approval_ids.filtered(
-                lambda a: a.level == current_level and a.status == 'pending'
+                lambda a: a.cycle == rec.current_cycle
+                    and a.level == current_level
+                    and a.status == 'pending'
             )
             approval.sudo().write({
                 'status': 'rejected',
@@ -225,11 +251,21 @@ class AssetRequest(models.Model):
                 'date': fields.Datetime.now(),
             })
 
+            # Mark all remaining pending approvals in this cycle as "no_action"
+            remaining_pending = rec.approval_ids.filtered(
+                lambda a: a.cycle == rec.current_cycle and a.status == 'pending'
+            )
+            if remaining_pending:
+                remaining_pending.sudo().write({
+                    'status': 'no_action',
+                    'date': fields.Datetime.now(),
+                })
+
             rec.state = 'rejected'
             rec.activity_unlink(['mail.mail_activity_data_todo'])
             rec.message_post(body=_(
-                "Request rejected by %s (%s).",
-                self.env.user.name,
+                "Cycle %s — Request rejected by %s (%s).",
+                rec.current_cycle, self.env.user.name,
                 APPROVAL_LEVEL_MAP[current_level]['role'],
             ))
 
@@ -243,10 +279,13 @@ class AssetRequest(models.Model):
             is_system = self.env.user.has_group('base.group_system')
             if not is_admin and not is_system:
                 raise UserError(_("Only Admin users can reset requests to draft."))
-            rec.approval_ids.sudo().unlink()
+            # Preserve approval history — do NOT unlink approval_ids
             rec.activity_unlink(['mail.mail_activity_data_todo'])
             rec.state = 'draft'
-            rec.message_post(body=_("Request reset to draft."))
+            rec.message_post(body=_(
+                "Request reset to draft (was cycle %s). Ready for revision.",
+                rec.current_cycle,
+            ))
 
     # ------------------------------------------------------------------
     # Helpers
@@ -279,7 +318,9 @@ class AssetRequest(models.Model):
         """
         self.ensure_one()
         approval = self.approval_ids.filtered(
-            lambda a: a.level == level and a.status == 'pending'
+            lambda a: a.cycle == self.current_cycle
+                and a.level == level
+                and a.status == 'pending'
         )
         if not approval:
             raise UserError(_("No pending approval found for Level %s.", level))
@@ -306,7 +347,9 @@ class AssetRequest(models.Model):
             return
 
         approval = self.approval_ids.filtered(
-            lambda a: a.level == current_level and a.status == 'pending'
+            lambda a: a.cycle == self.current_cycle
+                and a.level == current_level
+                and a.status == 'pending'
         )
         approver = approval.approver_id
         if not approver:
@@ -355,7 +398,9 @@ class AssetRequest(models.Model):
                 continue
 
             approval = rec.approval_ids.filtered(
-                lambda a: a.level == current_level and a.status == 'pending'
+                lambda a: a.cycle == rec.current_cycle
+                    and a.level == current_level
+                    and a.status == 'pending'
             )
             approver = approval.approver_id
             if not approver:

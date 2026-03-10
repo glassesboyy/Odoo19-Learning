@@ -12,12 +12,13 @@
                   decoration-success="state == 'approved'"
                   decoration-danger="state == 'rejected'">
                 <field name="name"/>
-                <field name="date"/>
+                <field name="description" optional="hide"/>
+                <field name="date" options="{'numeric': True}"/>
                 <field name="partner_id"/>
                 <field name="request_type"/>
-                <field name="required_date"/>
-                <field name="max_approval_level" string="Req. Level"/>
-                <field name="current_approval_level" string="Current Level"/>
+                <field name="required_date" options="{'numeric': True}"/>
+                <field name="max_approval_level" string="Req. Level" optional="hide"/>
+                <field name="current_approval_level" string="Current Level" optional="hide"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-warning="state == 'waiting_approval'"
@@ -49,7 +50,7 @@
                             groups="asset_request.group_approver_l1"/>
                     <field name="is_current_approver" invisible="1"/>
                     <field name="can_reset_to_draft" invisible="1"/>
-                    <button name="action_reset_to_draft" type="object" string="Reset to Draft"
+                    <button name="action_reset_to_draft" type="object" string="Create Revision"
                             invisible="not can_reset_to_draft"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,waiting_approval,approved"/>
@@ -60,22 +61,27 @@
                         <h1>
                             <field name="name" placeholder="Auto-generated"/>
                         </h1>
+                        <label for="description"/>
+                        <field name="description" placeholder="Description / purpose of this request..."
+                               readonly="state != 'draft'"/>
                     </div>
                     <group>
                         <group>
-                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"
+                                   options="{'numeric': True}"/>
                             <field name="partner_id" readonly="state != 'draft'"/>
                             <field name="request_type" readonly="state != 'draft'"/>
                         </group>
                         <group>
-                            <field name="required_date" readonly="state != 'draft'"/>
+                            <field name="required_date" readonly="state != 'draft'"
+                                   options="{'numeric': True}"/>
                             <field name="max_approval_level" string="Required Approval Level"/>
                             <field name="current_approval_level" string="Current Pending Level"/>
                         </group>
                     </group>
                     <group>
                         <field name="notes" readonly="state != 'draft'"
-                               placeholder="Additional notes or remarks..."/>
+                               placeholder="Additional notes..."/>
                     </group>
                     <group>
                         <field name="attachment" filename="attachment_filename"
@@ -86,6 +92,7 @@
                         <page string="Request Lines">
                             <field name="line_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
+                                    <field name="sequence" string="No" readonly="1"/>
                                     <field name="brand_id"/>
                                     <field name="model_id"/>
                                     <field name="quantity"/>
@@ -96,15 +103,21 @@
                             <field name="approval_ids" readonly="1">
                                 <list decoration-success="status == 'approved'"
                                       decoration-danger="status == 'rejected'"
-                                      decoration-warning="status == 'pending'">
+                                      decoration-warning="status == 'pending'"
+                                      decoration-muted="status == 'no_action'"
+                                      decoration-info="cycle % 2 == 0">
+                                    <field name="cycle" widget="badge"
+                                           decoration-success="cycle % 2 != 0"
+                                           decoration-info="cycle % 2 == 0"/>
                                     <field name="level"/>
                                     <field name="role"/>
                                     <field name="approver_id"/>
                                     <field name="status" widget="badge"
                                            decoration-success="status == 'approved'"
                                            decoration-danger="status == 'rejected'"
-                                           decoration-warning="status == 'pending'"/>
-                                    <field name="date"/>
+                                           decoration-warning="status == 'pending'"
+                                           decoration-muted="status == 'no_action'"/>
+                                    <field name="date" options="{'numeric': True}"/>
                                 </list>
                             </field>
                         </page>

@@ -19,7 +19,7 @@
                             <div class="col-6">
                                 <table class="table table-sm table-borderless">
                                     <tr>
-                                        <td class="fw-bold" style="width: 40%;">Borrower</td>
+                                        <td class="fw-bold" style="width: 40%;">Company</td>
                                         <td><t t-out="doc.partner_id.name"/></td>
                                     </tr>
                                     <tr>

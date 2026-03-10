@@ -19,7 +19,7 @@ class LoanAmortizationLine(models.Model):
         store=True,
     )
     sequence = fields.Integer(
-        string='Month #',
+        string='Month',
         required=True,
     )
     date = fields.Date(
@@ -49,4 +49,19 @@ class LoanAmortizationLine(models.Model):
         string='Remaining Balance',
         currency_field='currency_id',
         digits=(16, 2),
+    )
+
+    # === Journal Entry Link ===
+    move_id = fields.Many2one(
+        'account.move',
+        string='Journal Entry',
+        readonly=True,
+        copy=False,
+        ondelete='set null',
+        help='The journal entry created for this payment period.',
+    )
+    move_state = fields.Selection(
+        related='move_id.state',
+        string='Entry Status',
+        store=True,
     )

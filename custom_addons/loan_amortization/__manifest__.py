@@ -15,10 +15,11 @@
         - Track loan status (Draft → Confirmed → Done)
         - Print PDF amortization schedule report
         - Mail thread integration for activity tracking
+        - Auto-generate journal entries for each monthly payment
     """,
     'author': 'Custom',
     'license': 'LGPL-3',
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'mail', 'account'],
     'data': [
         'security/res_groups.xml',
         'security/ir.model.access.csv',

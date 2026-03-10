@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Demo Borrower -->
+        <!-- Demo Company -->
         <record id="demo_partner_borrower" model="res.partner">
             <field name="name">PT. Maju Jaya Leasing</field>
             <field name="company_type">company</field>
