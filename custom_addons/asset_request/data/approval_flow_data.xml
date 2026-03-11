@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================ -->
+        <!-- Default Approval Flow: Asset Request Approval                 -->
+        <!-- ============================================================ -->
+        <record id="approval_flow_asset_request" model="approval.flow">
+            <field name="name">Asset Request Approval</field>
+            <field name="active" eval="True"/>
+            <field name="description">Default approval workflow for asset requests with 3 levels: Manager, Sr. Manager, and Director.</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Approval Level 1 - Manager                                    -->
+        <!-- ============================================================ -->
+        <record id="approval_level_1" model="approval.level">
+            <field name="flow_id" ref="approval_flow_asset_request"/>
+            <field name="sequence">1</field>
+            <field name="role">Manager</field>
+            <field name="group_id" ref="asset_request.group_approver_l1"/>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Approval Level 2 - Sr. Manager                               -->
+        <!-- ============================================================ -->
+        <record id="approval_level_2" model="approval.level">
+            <field name="flow_id" ref="approval_flow_asset_request"/>
+            <field name="sequence">2</field>
+            <field name="role">Sr. Manager</field>
+            <field name="group_id" ref="asset_request.group_approver_l2"/>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Approval Level 3 - Director                                   -->
+        <!-- ============================================================ -->
+        <record id="approval_level_3" model="approval.level">
+            <field name="flow_id" ref="approval_flow_asset_request"/>
+            <field name="sequence">3</field>
+            <field name="role">Director</field>
+            <field name="group_id" ref="asset_request.group_approver_l3"/>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- Approval Rules                                                -->
+        <!-- ============================================================ -->
+
+        <!-- Level 1: Fallback rule (any brand, any model, any qty) -->
+        <record id="rule_level1_fallback" model="approval.rule">
+            <field name="level_id" ref="approval_level_1"/>
+            <field name="quantity_min">0</field>
+            <field name="quantity_max">0</field>
+        </record>
+
+        <!-- Level 1: Standard brands, qty 1-5 -->
+        <record id="rule_level1_standard_qty_1_5" model="approval.rule">
+            <field name="level_id" ref="approval_level_1"/>
+            <field name="quantity_min">1</field>
+            <field name="quantity_max">5</field>
+        </record>
+
+        <!-- Level 2: BMW, any model, qty 1-5 -->
+        <record id="rule_level2_bmw_qty_1_5" model="approval.rule">
+            <field name="level_id" ref="approval_level_2"/>
+            <field name="brand_id" ref="brand_bmw"/>
+            <field name="quantity_min">1</field>
+            <field name="quantity_max">5</field>
+        </record>
+
+        <!-- Level 2: Mercedes, any model, qty 1-5 -->
+        <record id="rule_level2_mercedes_qty_1_5" model="approval.rule">
+            <field name="level_id" ref="approval_level_2"/>
+            <field name="brand_id" ref="brand_mercedes"/>
+            <field name="quantity_min">1</field>
+            <field name="quantity_max">5</field>
+        </record>
+
+        <!-- Level 3: Any brand, any model, qty 6+ (unlimited) -->
+        <record id="rule_level3_any_qty_6_up" model="approval.rule">
+            <field name="level_id" ref="approval_level_3"/>
+            <field name="quantity_min">6</field>
+            <field name="quantity_max">0</field>
+        </record>
+
+    </data>
+</odoo>

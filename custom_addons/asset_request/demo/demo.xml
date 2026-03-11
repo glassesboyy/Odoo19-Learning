@@ -109,18 +109,53 @@
     </record>
 
     <!-- ============================================================ -->
-    <!-- Demo Approval Configuration                                   -->
+    <!-- Demo Approval Approvers                                       -->
     <!-- ============================================================ -->
-    <record id="asset_request.approval_config_level_1" model="asset.approval.config">
-        <field name="approver_id" ref="demo_user_joko"/>
+
+    <!-- Level 1 - Manager: Joko (primary), Zul + Jali (delegation) -->
+    <record id="demo_approver_l1_joko" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_1"/>
+        <field name="user_id" ref="demo_user_joko"/>
+        <field name="role_type">primary</field>
+    </record>
+    <record id="demo_approver_l1_zul" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_1"/>
+        <field name="user_id" ref="demo_user_zul"/>
+        <field name="role_type">delegation</field>
+    </record>
+    <record id="demo_approver_l1_jali" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_1"/>
+        <field name="user_id" ref="demo_user_jali"/>
+        <field name="role_type">delegation</field>
     </record>
 
-    <record id="asset_request.approval_config_level_2" model="asset.approval.config">
-        <field name="approver_id" ref="demo_user_wira"/>
+    <!-- Level 2 - Sr. Manager: Wira (primary), Vito + Ardya (delegation) -->
+    <record id="demo_approver_l2_wira" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_2"/>
+        <field name="user_id" ref="demo_user_wira"/>
+        <field name="role_type">primary</field>
+    </record>
+    <record id="demo_approver_l2_vito" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_2"/>
+        <field name="user_id" ref="demo_user_vito"/>
+        <field name="role_type">delegation</field>
+    </record>
+    <record id="demo_approver_l2_ardya" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_2"/>
+        <field name="user_id" ref="demo_user_ardya"/>
+        <field name="role_type">delegation</field>
     </record>
 
-    <record id="asset_request.approval_config_level_3" model="asset.approval.config">
-        <field name="approver_id" ref="demo_user_reno"/>
+    <!-- Level 3 - Director: Reno (primary), Sheva (delegation) -->
+    <record id="demo_approver_l3_reno" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_3"/>
+        <field name="user_id" ref="demo_user_reno"/>
+        <field name="role_type">primary</field>
+    </record>
+    <record id="demo_approver_l3_sheva" model="approval.approver">
+        <field name="level_id" ref="asset_request.approval_level_3"/>
+        <field name="user_id" ref="demo_user_sheva"/>
+        <field name="role_type">delegation</field>
     </record>
 
     <!-- ============================================================ -->

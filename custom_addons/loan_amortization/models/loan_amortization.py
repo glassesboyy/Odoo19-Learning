@@ -526,11 +526,17 @@ class LoanAmortization(models.Model):
         """Open the list of journal entries linked to this loan."""
         self.ensure_one()
         moves = self.line_ids.mapped('move_id')
+        form_view = self.env.ref('account.view_move_form', raise_if_not_found=False)
+        list_view = self.env.ref('account.view_move_tree', raise_if_not_found=False)
         action = {
             'name': _('Journal Entries'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'view_mode': 'list,form',
+            'views': [
+                (list_view.id if list_view else False, 'list'),
+                (form_view.id if form_view else False, 'form'),
+            ],
             'domain': [('id', 'in', moves.ids)],
             'context': {'default_move_type': 'entry'},
         }

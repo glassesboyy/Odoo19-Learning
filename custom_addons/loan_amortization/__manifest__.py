@@ -29,9 +29,9 @@
         'views/loan_amortization_views.xml',
         'views/loan_amortization_menu.xml',
     ],
-    'demo': [
-        'demo/demo.xml',
-    ],
+    # 'demo': [
+    #     'demo/demo.xml',
+    # ],
     'installable': True,
     'application': True,
     'auto_install': False,

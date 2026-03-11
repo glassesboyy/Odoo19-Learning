@@ -37,10 +37,17 @@
               action="asset_brand_model_action"
               sequence="20"/>
 
-    <menuitem id="asset_request_menu_approval_config"
-              name="Approval Configuration"
+    <menuitem id="asset_request_menu_approval_flows"
+              name="Approval Flows"
               parent="asset_request_menu_config"
-              action="asset_approval_config_action"
-              groups="asset_request.group_approver_l3,base.group_system"
+              action="approval_flow_action"
+              groups="asset_request.group_asset_request_admin,base.group_system"
               sequence="30"/>
+
+    <menuitem id="asset_request_menu_approval_levels"
+              name="Approval Levels"
+              parent="asset_request_menu_config"
+              action="approval_level_action"
+              groups="asset_request.group_asset_request_admin,base.group_system"
+              sequence="40"/>
 </odoo>

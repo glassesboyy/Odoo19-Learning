@@ -75,6 +75,7 @@
                         <group>
                             <field name="required_date" readonly="state != 'draft'"
                                    options="{'numeric': True}"/>
+                            <field name="flow_id" readonly="state != 'draft'"/>
                             <field name="max_approval_level" string="Required Approval Level"/>
                             <field name="current_approval_level" string="Current Pending Level"/>
                         </group>
@@ -100,7 +101,7 @@
                             </field>
                         </page>
                         <page string="Approval History">
-                            <field name="approval_ids" readonly="1">
+                            <field name="approval_history_ids" readonly="1">
                                 <list decoration-success="status == 'approved'"
                                       decoration-danger="status == 'rejected'"
                                       decoration-warning="status == 'pending'"
@@ -109,9 +110,11 @@
                                     <field name="cycle" widget="badge"
                                            decoration-success="cycle % 2 != 0"
                                            decoration-info="cycle % 2 == 0"/>
-                                    <field name="level"/>
+                                    <field name="level_sequence" string="Level"/>
                                     <field name="role"/>
-                                    <field name="approver_id"/>
+                                    <field name="assigned_approver_id" string="Assigned To"/>
+                                    <field name="actual_approver_id" string="Approved By"/>
+                                    <field name="is_delegation" widget="boolean"/>
                                     <field name="status" widget="badge"
                                            decoration-success="status == 'approved'"
                                            decoration-danger="status == 'rejected'"

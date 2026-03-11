@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- Approval Level - List View                                    -->
+    <!-- ============================================================ -->
+    <record id="approval_level_view_tree" model="ir.ui.view">
+        <field name="name">approval.level.tree</field>
+        <field name="model">approval.level</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="flow_id"/>
+                <field name="name"/>
+                <field name="role"/>
+                <field name="group_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Approval Level - Form View                                    -->
+    <!-- ============================================================ -->
+    <record id="approval_level_view_form" model="ir.ui.view">
+        <field name="name">approval.level.form</field>
+        <field name="model">approval.level</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Level 1 - Manager"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="flow_id"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="role" placeholder="e.g. Manager"/>
+                            <field name="group_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Approval Rules">
+                            <field name="rule_ids">
+                                <list>
+                                    <field name="brand_display" string="Brand"/>
+                                    <field name="model_display" string="Model"/>
+                                    <field name="quantity_min"/>
+                                    <field name="quantity_max" string="Qty Max (0=∞)"/>
+                                    <field name="priority" readonly="1"/>
+                                    <field name="is_fallback" widget="boolean"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <group string="Criteria">
+                                            <field name="brand_id"/>
+                                            <field name="model_id" domain="[('brand_id', '=', brand_id)]"/>
+                                        </group>
+                                        <group string="Quantity Range">
+                                            <field name="quantity_min"/>
+                                            <field name="quantity_max"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <field name="priority" readonly="1"/>
+                                        <field name="is_fallback" readonly="1"/>
+                                        <field name="name" readonly="1" string="Summary"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Approvers">
+                            <field name="approver_ids">
+                                <list editable="bottom">
+                                    <field name="user_id"/>
+                                    <field name="role_type"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Approval Level - Action                                       -->
+    <!-- ============================================================ -->
+    <record id="approval_level_action" model="ir.actions.act_window">
+        <field name="name">Approval Levels</field>
+        <field name="res_model">approval.level</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add approval levels to your flows.
+            </p>
+            <p>
+                Each level defines a sequential approval step with rules and designated approvers.
+            </p>
+        </field>
+    </record>
+</odoo>
