@@ -49,7 +49,7 @@
                                     <field name="brand_display" string="Brand"/>
                                     <field name="model_display" string="Model"/>
                                     <field name="quantity_min"/>
-                                    <field name="quantity_max" string="Qty Max (0=∞)"/>
+                                    <field name="quantity_max_display" string="Qty Max"/>
                                     <field name="priority" readonly="1"/>
                                     <field name="is_fallback" widget="boolean"/>
                                 </list>

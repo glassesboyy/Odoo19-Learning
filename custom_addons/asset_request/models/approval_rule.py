@@ -17,6 +17,7 @@ class ApprovalRule(models.Model):
                                help='Leave empty for wildcard (any model).')
     brand_display = fields.Char(compute='_compute_brand_display', string='Brand')
     model_display = fields.Char(compute='_compute_model_display', string='Model')
+    quantity_max_display = fields.Char(compute='_compute_quantity_max_display', string='Qty Max')
     quantity_min = fields.Integer(string='Qty Min', default=0,
                                  help='Minimum quantity (inclusive). 0 = no lower bound.')
     quantity_max = fields.Integer(string='Qty Max', default=0,
@@ -50,6 +51,11 @@ class ApprovalRule(models.Model):
     def _compute_model_display(self):
         for rec in self:
             rec.model_display = rec.model_id.name or 'Any Model'
+
+    @api.depends('quantity_max')
+    def _compute_quantity_max_display(self):
+        for rec in self:
+            rec.quantity_max_display = '∞' if rec.quantity_max == 0 else str(rec.quantity_max)
 
     @api.depends('brand_id', 'model_id', 'quantity_min', 'quantity_max')
     def _compute_priority(self):

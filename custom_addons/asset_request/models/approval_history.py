@@ -19,6 +19,9 @@ class ApprovalHistory(models.Model):
     actual_approver_id = fields.Many2one('res.users', string='Actual Approver',
                                          readonly=True,
                                          help='The user who actually performed the approval action.')
+    approver_id = fields.Many2one('res.users', compute='_compute_approver_id',
+                                  string='Approver',
+                                  help='Actual approver if action was taken, otherwise the assigned approver.')
     is_delegation = fields.Boolean(compute='_compute_is_delegation', store=True,
                                    string='Delegated',
                                    help='True if the action was performed by a delegation approver.')
@@ -30,6 +33,11 @@ class ApprovalHistory(models.Model):
     ], default='pending', readonly=True)
     date = fields.Datetime(string='Action Date', readonly=True)
     note = fields.Text(string='Note')
+
+    @api.depends('actual_approver_id', 'assigned_approver_id')
+    def _compute_approver_id(self):
+        for rec in self:
+            rec.approver_id = rec.actual_approver_id or rec.assigned_approver_id
 
     @api.depends('assigned_approver_id', 'actual_approver_id')
     def _compute_is_delegation(self):

@@ -112,8 +112,7 @@
                                            decoration-info="cycle % 2 == 0"/>
                                     <field name="level_sequence" string="Level"/>
                                     <field name="role"/>
-                                    <field name="assigned_approver_id" string="Assigned To"/>
-                                    <field name="actual_approver_id" string="Approved By"/>
+                                    <field name="approver_id" string="Approver"/>
                                     <field name="is_delegation" widget="boolean"/>
                                     <field name="status" widget="badge"
                                            decoration-success="status == 'approved'"
